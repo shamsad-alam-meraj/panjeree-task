@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card } from '@/components/molecules';
-import { Badge } from '@/components/atoms';
 import { Question } from '@/types';
 
 interface ExamQuestionCardProps {
@@ -18,30 +17,31 @@ export const ExamQuestionCard: React.FC<ExamQuestionCardProps> = ({
   questionNumber,
   totalQuestions,
 }) => {
+  const optionLetters = ['A', 'B', 'C', 'D'];
+
   return (
-    <Card className="mb-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div>
-          <h3 className="text-xl font-semibold text-slate-900">Question {questionNumber}</h3>
-          <p className="mt-1 text-sm text-slate-500">{questionNumber} of {totalQuestions}</p>
-        </div>
-        <Badge variant="primary" size="sm">
-          {questionNumber} / {totalQuestions}
-        </Badge>
+    <Card>
+      {/* Question number label */}
+      <div className="mb-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">
+          Question {questionNumber} <span className="text-slate-400">/ {totalQuestions}</span>
+        </p>
+        <p className="text-lg font-semibold text-slate-900 leading-relaxed">{question.question}</p>
       </div>
 
-      <p className="text-slate-700 text-lg font-medium mb-6">{question.question}</p>
-
-      <div className="grid gap-4">
-        {question.options.map((option) => {
+      {/* Options */}
+      <div className="grid gap-3">
+        {question.options.map((option, idx) => {
           const active = currentAnswer === option;
+          const letter = optionLetters[idx] ?? String(idx + 1);
+
           return (
             <label
               key={option}
-              className={`group block rounded-[1.5rem] border p-5 transition duration-200 ${
+              className={`group flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition-all duration-200 ${
                 active
-                  ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10'
-                  : 'border-slate-200 bg-white hover:border-primary/70'
+                  ? 'border-primary bg-primary/5 shadow-md shadow-primary/10'
+                  : 'border-slate-200 bg-white hover:border-primary/50 hover:bg-slate-50'
               }`}
             >
               <input
@@ -52,16 +52,22 @@ export const ExamQuestionCard: React.FC<ExamQuestionCardProps> = ({
                 onChange={(e) => onAnswerChange(e.target.value)}
                 className="sr-only"
               />
-              <div className="flex items-center gap-4">
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border transition duration-200 ${
-                    active ? 'border-primary bg-primary text-white' : 'border-slate-300 bg-white text-transparent group-hover:border-primary'
-                  }`}
-                >
-                  ✓
-                </span>
-                <span className="text-slate-700">{option}</span>
-              </div>
+              {/* Option letter bubble */}
+              <span
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold transition-all duration-200 ${
+                  active
+                    ? 'bg-primary text-white shadow-md shadow-primary/30'
+                    : 'bg-slate-100 text-slate-500 group-hover:bg-primary/10 group-hover:text-primary'
+                }`}
+              >
+                {letter}
+              </span>
+              <span className={`text-base font-medium ${active ? 'text-slate-900' : 'text-slate-700'}`}>
+                {option}
+              </span>
+              {active && (
+                <span className="ml-auto text-primary text-lg shrink-0">✓</span>
+              )}
             </label>
           );
         })}

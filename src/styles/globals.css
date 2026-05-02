@@ -28,11 +28,36 @@ body {
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: radial-gradient(circle at top left, rgba(99, 102, 241, 0.15), transparent 25%),
-    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent 25%);
 }
 
 ::selection {
   background: #4f46e5;
   color: white;
+}
+
+/* Focus ring consistency */
+*:focus-visible {
+  outline: 2px solid #4F46E5;
+  outline-offset: 2px;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Tabular numbers for timers / scores */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }

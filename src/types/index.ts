@@ -11,6 +11,8 @@ export interface Question {
   correctAnswer: string;
 }
 
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface Exam {
   id: string;
   title: string;
@@ -18,12 +20,15 @@ export interface Exam {
   duration: number; // in minutes
   totalQuestions: number;
   questions: Question[];
+  category: string;
+  difficulty: Difficulty;
 }
 
 export interface ExamResult {
   id: string;
   userId: string;
   examId: string;
+  examTitle: string;
   score: number;
   totalScore: number;
   percentage: number;

@@ -31,9 +31,7 @@ export default function ExamPage() {
 
   return (
     <MainTemplate>
-      <div className="flex justify-center">
-        <ExamForm onComplete={handleExamComplete} />
-      </div>
+      <ExamForm onComplete={handleExamComplete} />
     </MainTemplate>
   );
 }

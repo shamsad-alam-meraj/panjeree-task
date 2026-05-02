@@ -14,6 +14,7 @@ interface RegisterFormProps {
 export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   const [formData, setFormData] = useState({ name: '', email: '', confirmEmail: '' });
   const [errors, setErrors] = useState({ name: '', email: '', confirmEmail: '' });
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const validateForm = () => {
@@ -21,6 +22,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
     }
 
     if (!formData.email.trim()) {
@@ -41,28 +44,33 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    const user: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: formData.name,
-      email: formData.email,
-    };
-
-    dispatch(register(user));
-    onSuccess?.();
+    setIsLoading(true);
+    setTimeout(() => {
+      const user: User = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+      };
+      dispatch(register(user));
+      onSuccess?.();
+      setIsLoading(false);
+    }, 400);
   };
 
   return (
     <Card className="w-full max-w-md">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">Create Account</h2>
-        <p className="text-gray-600 text-sm">Join us to test your knowledge</p>
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/30">
+          <span className="text-2xl">🚀</span>
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900">Create Account</h2>
+        <p className="mt-1.5 text-sm text-slate-500">Join and start testing your knowledge</p>
       </div>
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit} noValidate>
         <FormField
           label="Full Name"
           id="name"
@@ -87,14 +95,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           label="Confirm Email"
           id="confirmEmail"
           type="email"
-          placeholder="Confirm your email"
+          placeholder="Confirm your email address"
           value={formData.confirmEmail}
           onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
           error={errors.confirmEmail}
           required
         />
-        <Button type="submit" variant="primary" size="md" className="w-full mt-2">
-          Register
+        <Button type="submit" variant="primary" size="md" className="w-full mt-4" disabled={isLoading}>
+          {isLoading ? 'Creating account…' : 'Create Account →'}
         </Button>
       </form>
     </Card>

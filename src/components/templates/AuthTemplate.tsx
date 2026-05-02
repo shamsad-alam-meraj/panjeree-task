@@ -7,9 +7,33 @@ interface AuthTemplateProps {
 export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.35),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(56,189,248,0.2),_transparent_30%)]" />
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="w-full max-w-5xl rounded-[2rem] border border-white/10 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
+      {/* Background glows */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-violet-600/20 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-sky-500/10 blur-3xl" />
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      />
+
+      {/* Branding top bar */}
+      <div className="relative z-10 flex items-center gap-2.5 px-6 pt-6">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/30">
+          <span className="text-sm font-extrabold text-white">P</span>
+        </div>
+        <span className="text-lg font-bold text-white/90">Panjeree Exam</span>
+      </div>
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-16">
+        <div className="w-full max-w-5xl">
           {children}
         </div>
       </div>

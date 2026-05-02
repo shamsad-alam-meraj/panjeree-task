@@ -14,16 +14,18 @@ export default function LoginPage() {
 
   return (
     <AuthTemplate>
-      <LoginForm onSuccess={handleLoginSuccess} />
-      <p className="text-white mt-6">
-        Don't have an account?{' '}
-        <button
-          onClick={() => router.push('/register')}
-          className="font-bold underline hover:text-gray-200"
-        >
-          Register here
-        </button>
-      </p>
+      <div className="flex flex-col items-center">
+        <LoginForm onSuccess={handleLoginSuccess} />
+        <p className="mt-5 text-sm text-slate-400">
+          Don&apos;t have an account?{' '}
+          <button
+            onClick={() => router.push('/register')}
+            className="font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+          >
+            Register here
+          </button>
+        </p>
+      </div>
     </AuthTemplate>
   );
 }

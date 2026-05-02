@@ -14,6 +14,7 @@ interface LoginFormProps {
 export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const [formData, setFormData] = useState({ name: '', email: '' });
   const [errors, setErrors] = useState({ name: '', email: '' });
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const validateForm = () => {
@@ -21,6 +22,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
     }
 
     if (!formData.email.trim()) {
@@ -35,28 +38,34 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    const user: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: formData.name,
-      email: formData.email,
-    };
-
-    dispatch(login(user));
-    onSuccess?.();
+    setIsLoading(true);
+    // Simulate brief async action
+    setTimeout(() => {
+      const user: User = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+      };
+      dispatch(login(user));
+      onSuccess?.();
+      setIsLoading(false);
+    }, 400);
   };
 
   return (
     <Card className="w-full max-w-md">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">Welcome Back</h2>
-        <p className="text-gray-600 text-sm">Sign in to your account to continue</p>
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/30">
+          <span className="text-2xl">👤</span>
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900">Welcome Back</h2>
+        <p className="mt-1.5 text-sm text-slate-500">Sign in to continue to your exams</p>
       </div>
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit} noValidate>
         <FormField
           label="Full Name"
           id="name"
@@ -77,8 +86,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           error={errors.email}
           required
         />
-        <Button type="submit" variant="primary" size="md" className="w-full mt-2">
-          Login
+        <Button type="submit" variant="primary" size="md" className="w-full mt-4" disabled={isLoading}>
+          {isLoading ? 'Signing in…' : 'Sign In →'}
         </Button>
       </form>
     </Card>
