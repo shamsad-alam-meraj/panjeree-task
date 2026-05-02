@@ -52,7 +52,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
 
   return (
     <Card className="w-full max-w-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Login</h2>
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">Welcome Back</h2>
+        <p className="text-gray-600 text-sm">Sign in to your account to continue</p>
+      </div>
       <form onSubmit={handleSubmit}>
         <FormField
           label="Full Name"
@@ -74,7 +77,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           error={errors.email}
           required
         />
-        <Button type="submit" variant="primary" size="md" className="w-full">
+        <Button type="submit" variant="primary" size="md" className="w-full mt-2">
           Login
         </Button>
       </form>

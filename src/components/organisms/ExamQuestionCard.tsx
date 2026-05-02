@@ -20,29 +20,51 @@ export const ExamQuestionCard: React.FC<ExamQuestionCardProps> = ({
 }) => {
   return (
     <Card className="mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold text-gray-800">Question {questionNumber}</h3>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <h3 className="text-xl font-semibold text-slate-900">Question {questionNumber}</h3>
+          <p className="mt-1 text-sm text-slate-500">{questionNumber} of {totalQuestions}</p>
+        </div>
         <Badge variant="primary" size="sm">
-          {questionNumber} of {totalQuestions}
+          {questionNumber} / {totalQuestions}
         </Badge>
       </div>
 
-      <p className="text-gray-700 text-base mb-6 font-medium">{question.question}</p>
+      <p className="text-slate-700 text-lg font-medium mb-6">{question.question}</p>
 
-      <div className="space-y-3">
-        {question.options.map((option) => (
-          <label key={option} className="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" style={{ borderColor: currentAnswer === option ? '#4F46E5' : '#D1D5DB' }}>
-            <input
-              type="radio"
-              name={`question-${question.id}`}
-              value={option}
-              checked={currentAnswer === option}
-              onChange={(e) => onAnswerChange(e.target.value)}
-              className="w-4 h-4 text-primary"
-            />
-            <span className="ml-3 text-gray-700">{option}</span>
-          </label>
-        ))}
+      <div className="grid gap-4">
+        {question.options.map((option) => {
+          const active = currentAnswer === option;
+          return (
+            <label
+              key={option}
+              className={`group block rounded-[1.5rem] border p-5 transition duration-200 ${
+                active
+                  ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10'
+                  : 'border-slate-200 bg-white hover:border-primary/70'
+              }`}
+            >
+              <input
+                type="radio"
+                name={`question-${question.id}`}
+                value={option}
+                checked={active}
+                onChange={(e) => onAnswerChange(e.target.value)}
+                className="sr-only"
+              />
+              <div className="flex items-center gap-4">
+                <span
+                  className={`flex h-5 w-5 items-center justify-center rounded-full border transition duration-200 ${
+                    active ? 'border-primary bg-primary text-white' : 'border-slate-300 bg-white text-transparent group-hover:border-primary'
+                  }`}
+                >
+                  ✓
+                </span>
+                <span className="text-slate-700">{option}</span>
+              </div>
+            </label>
+          );
+        })}
       </div>
     </Card>
   );

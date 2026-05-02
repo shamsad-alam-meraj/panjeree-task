@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveAnswer, clearCurrentExam } from '@/store/examsSlice';
 import { saveResult } from '@/store/resultsSlice';
@@ -16,10 +16,10 @@ export const ExamForm: React.FC<ExamFormProps> = ({ onComplete }) => {
   const dispatch = useDispatch();
   const { currentExam, userAnswers } = useSelector((state: RootState) => state.exams);
   const { user } = useSelector((state: RootState) => state.auth);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
 
   if (!currentExam || !user) {
-    return <div className="text-center text-gray-600">No exam selected</div>;
+    return <div className="text-center text-slate-600">No exam selected</div>;
   }
 
   const currentQuestion = currentExam.questions[currentQuestionIndex];
@@ -38,7 +38,6 @@ export const ExamForm: React.FC<ExamFormProps> = ({ onComplete }) => {
   };
 
   const handleSubmitExam = () => {
-    // Calculate score
     let score = 0;
     currentExam.questions.forEach((question) => {
       if (userAnswers[question.id] === question.correctAnswer) {
@@ -63,22 +62,36 @@ export const ExamForm: React.FC<ExamFormProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">{currentExam.title}</h1>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+    <div className="w-full max-w-3xl">
+      <div className="mb-8 rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold text-slate-900">{currentExam.title}</h1>
+            <p className="mt-2 text-sm text-slate-500">{currentExam.description}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-3xl bg-slate-50 px-4 py-3 text-center">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Duration</p>
+              <p className="mt-2 text-lg font-semibold text-slate-900">{currentExam.duration} min</p>
+            </div>
+            <div className="rounded-3xl bg-slate-50 px-4 py-3 text-center">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Questions</p>
+              <p className="mt-2 text-lg font-semibold text-slate-900">{currentExam.totalQuestions}</p>
+            </div>
+            <div className="rounded-3xl bg-slate-50 px-4 py-3 text-center">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Progress</p>
+              <p className="mt-2 text-lg font-semibold text-slate-900">{currentQuestionIndex + 1}/{currentExam.questions.length}</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-6 rounded-full bg-slate-100 h-2 overflow-hidden">
           <div
-            className="bg-primary h-2 rounded-full transition-all"
+            className="h-2 rounded-full bg-primary transition-all"
             style={{ width: `${((currentQuestionIndex + 1) / currentExam.questions.length) * 100}%` }}
           />
         </div>
-        <p className="text-sm text-gray-600 mt-2">
-          Question {currentQuestionIndex + 1} of {currentExam.questions.length}
-        </p>
       </div>
 
-      {/* Question */}
       <ExamQuestionCard
         question={currentQuestion}
         currentAnswer={userAnswers[currentQuestion.id] || ''}
@@ -87,23 +100,23 @@ export const ExamForm: React.FC<ExamFormProps> = ({ onComplete }) => {
         totalQuestions={currentExam.questions.length}
       />
 
-      {/* Navigation Buttons */}
-      <div className="flex gap-4 justify-between mt-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between mt-8">
         <Button
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
           variant="secondary"
           size="md"
+          className="w-full sm:w-auto"
         >
           Previous
         </Button>
 
         {isLastQuestion ? (
-          <Button onClick={handleSubmitExam} variant="success" size="md">
+          <Button onClick={handleSubmitExam} variant="success" size="md" className="w-full sm:w-auto">
             Submit Exam
           </Button>
         ) : (
-          <Button onClick={handleNextQuestion} variant="primary" size="md">
+          <Button onClick={handleNextQuestion} variant="primary" size="md" className="w-full sm:w-auto">
             Next
           </Button>
         )}

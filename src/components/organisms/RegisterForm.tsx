@@ -58,7 +58,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
   return (
     <Card className="w-full max-w-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Register</h2>
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">Create Account</h2>
+        <p className="text-gray-600 text-sm">Join us to test your knowledge</p>
+      </div>
       <form onSubmit={handleSubmit}>
         <FormField
           label="Full Name"
@@ -90,7 +93,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           error={errors.confirmEmail}
           required
         />
-        <Button type="submit" variant="primary" size="md" className="w-full">
+        <Button type="submit" variant="primary" size="md" className="w-full mt-2">
           Register
         </Button>
       </form>
