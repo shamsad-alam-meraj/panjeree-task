@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/molecules';
+import { cn } from '@/utils/cn';
 import { Question } from '@/types';
 
 interface ExamQuestionCardProps {
@@ -10,6 +10,8 @@ interface ExamQuestionCardProps {
   totalQuestions: number;
 }
 
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
 export const ExamQuestionCard: React.FC<ExamQuestionCardProps> = ({
   question,
   currentAnswer,
@@ -17,61 +19,78 @@ export const ExamQuestionCard: React.FC<ExamQuestionCardProps> = ({
   questionNumber,
   totalQuestions,
 }) => {
-  const optionLetters = ['A', 'B', 'C', 'D'];
-
   return (
-    <Card>
-      {/* Question number label */}
-      <div className="mb-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">
-          Question {questionNumber} <span className="text-slate-400">/ {totalQuestions}</span>
-        </p>
-        <p className="text-lg font-semibold text-slate-900 leading-relaxed">{question.question}</p>
+    <div className="animate-scaleIn rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card">
+      {/* Question label */}
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-widest text-primary">
+            Question {questionNumber}
+          </span>
+          <span className="ml-1.5 text-xs text-slate-400">of {totalQuestions}</span>
+        </div>
+        {currentAnswer && (
+          <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-200">
+            ✓ Answered
+          </span>
+        )}
       </div>
 
+      {/* Question text */}
+      <p className="mb-6 text-lg font-semibold leading-relaxed text-slate-900">
+        {question.question}
+      </p>
+
       {/* Options */}
-      <div className="grid gap-3">
+      <div className="grid gap-2.5">
         {question.options.map((option, idx) => {
-          const active = currentAnswer === option;
-          const letter = optionLetters[idx] ?? String(idx + 1);
+          const isSelected = currentAnswer === option;
+          const letter = LETTERS[idx] ?? String(idx + 1);
 
           return (
             <label
               key={option}
-              className={`group flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition-all duration-200 ${
-                active
+              className={cn(
+                'group flex cursor-pointer items-center gap-3.5 rounded-xl border-2 p-4 transition-all duration-200',
+                isSelected
                   ? 'border-primary bg-primary/5 shadow-md shadow-primary/10'
-                  : 'border-slate-200 bg-white hover:border-primary/50 hover:bg-slate-50'
-              }`}
+                  : 'border-slate-100 bg-slate-50/50 hover:border-primary/40 hover:bg-white hover:shadow-sm',
+              )}
             >
               <input
                 type="radio"
-                name={`question-${question.id}`}
+                name={`q-${question.id}`}
                 value={option}
-                checked={active}
+                checked={isSelected}
                 onChange={(e) => onAnswerChange(e.target.value)}
                 className="sr-only"
               />
-              {/* Option letter bubble */}
+              {/* Letter chip */}
               <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold transition-all duration-200 ${
-                  active
-                    ? 'bg-primary text-white shadow-md shadow-primary/30'
-                    : 'bg-slate-100 text-slate-500 group-hover:bg-primary/10 group-hover:text-primary'
-                }`}
+                className={cn(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-all duration-200',
+                  isSelected
+                    ? 'bg-primary text-white shadow-sm shadow-primary/30'
+                    : 'bg-slate-200 text-slate-500 group-hover:bg-primary/15 group-hover:text-primary',
+                )}
               >
                 {letter}
               </span>
-              <span className={`text-base font-medium ${active ? 'text-slate-900' : 'text-slate-700'}`}>
+              <span
+                className={cn(
+                  'flex-1 text-sm font-medium transition-colors',
+                  isSelected ? 'text-primary' : 'text-slate-700 group-hover:text-slate-900',
+                )}
+              >
                 {option}
               </span>
-              {active && (
-                <span className="ml-auto text-primary text-lg shrink-0">✓</span>
+              {isSelected && (
+                <span className="shrink-0 text-primary text-base" aria-hidden>✓</span>
               )}
             </label>
           );
         })}
       </div>
-    </Card>
+    </div>
   );
 };
